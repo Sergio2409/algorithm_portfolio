@@ -35,6 +35,17 @@ class Vertex(object):
 NoPathFound = object()
 
 
+class Edge(list):
+
+    def __init__(self, source, to, weight):
+        self.source = source
+        self.to = to
+        self.weight = weight
+        self.append(self.source)
+        self.append(self.to)
+        self.append(self.weight)
+
+
 class Path(object):
     """Path of graph implementation
 
@@ -93,7 +104,7 @@ class UndirectedGraph(object):
     @staticmethod
     def initialize_bag(v1, v2, weight=0):
         bag = LinkedList()
-        bag.add([v1, v2, weight])
+        bag.add(Edge(v1, v2, weight))
         return bag
 
     def add_edge(self, v1, v2, weight=0):
@@ -131,7 +142,7 @@ class UndirectedGraph(object):
         if adjacent:
             return adjacent
         else:
-            print("Vertex {0} does not exists!".format(str(vertex)))
+            #print("Vertex {0} does not exists!".format(str(vertex)))
             return []
 
     def degree(self, vertex):
