@@ -68,10 +68,6 @@ class Path(object):
 
 
 class Graph(object):
-    pass
-
-
-class UndirectedGraph(object):
     """
 
     """
@@ -184,3 +180,48 @@ class UndirectedGraph(object):
 
         """
         pass
+
+
+class DiGraph(Graph):
+    """
+    Directed Graph
+
+    Set of vertices connected pairwise by directed edges.
+
+    Digraph problems:
+
+    + Shortest path. What is the shortest directed path from s to t ?
+    + Topological sort. Can you draw a digraph so that all edges point upwards?
+    + Strong connectivity. Is there a directed path between all pairs of vertices?
+    + Transitive closure. For which vertices v and w is there a path from v to w ?
+    + PageRank. What is the importance of a web page?
+
+
+    Example:
+    >>> graph = DiGraph([[4,2], [ 2, 3], [ 3,2 ], [ 6, 0], [ 0,1 ], [ 2,0 ], [ 11,12 ], [ 2, 9], [9, 10], [ 9, 11], [ 8, 9], [ 10,12 ], [ 11,4 ], [ 4,3 ], [ 3, 5], [6 , 8], [ 8,6 ], [ 5, 4], [0 , 5], [ 6,9 ], [ 7,6 ]])
+
+    """
+
+    def add_edge(self, v1, v2, weight=0):
+        """Add an edge to the grap
+
+        :param v1: vertex 2
+        :param v2: vertex 1
+        :param weight: edge weight
+        :return:None
+
+        """
+        self._edges_count += 1
+        bag1 = self.adjacency.get(v1, None)
+        if bag1 is None:
+            bag1 = self.initialize_bag(v1, v2, weight)
+        else:
+            bag1.add([v1, v2, weight])
+        self.adjacency[v1] = bag1
+
+    def reverse(self):
+        """
+        Return the reverse of this digraph
+        :return:
+        """
+        raise NotImplemented("Not implemented")
