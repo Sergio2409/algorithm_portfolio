@@ -10,7 +10,7 @@
 Module description goes here
 
 """
-
+from heapq import heappush, heappop
 from collections import OrderedDict, deque
 from algorithm import Algorithm
 
@@ -247,5 +247,78 @@ class ConnectedComponent(Algorithm):
          Typical Applications:
         ・ Particle detection. Given grayscale image of particles, identify "blobs."
         ・ Particle tracking. Track moving particles over time.        
+        
+        ''')
+
+
+class Dijkstra(Algorithm, GraphSearch):
+    """
+    Example:
+
+    from data_structures.graph import DiGraph
+    from graph_search_algs import Dijkstra
+    graph = DiGraph([[0, 1, 5], [0, 7, 8], [0, 4, 9], [1 , 3, 15], [1, 2, 12], [1, 7, 4], [2, 3, 3], [2, 6, 11], [3, 6, 9], [4, 7, 5], [4, 5, 4], [4, 6, 20], [5, 2, 1], [5, 6, 13], [7, 2, 7], [7, 5, 6]])
+    shortest_path = Dijkstra(graph, 0)
+
+    """
+
+    def __init__(self, graph, source):
+        """
+
+        :param graph:
+        :param source:
+        """
+        super(Dijkstra, self).__init__(graph, source)
+        self.distTo = OrderedDict()  # edgeTo[v] = previous vertex on path from s to v
+        self.ordered_queue = []
+        self.source = source
+        self.graph = graph
+        BIG_INT = 100000
+        for vertex in graph.vertices:
+            self.distTo[vertex] = BIG_INT
+
+        self.distTo[source] = 0
+        heappush(self.ordered_queue, [0.0, source])
+        while len(self.ordered_queue) > 0:
+            _, vertex = heappop(self.ordered_queue)  # Take the vertex with the minimum weight.
+            self.marked[vertex] = True
+            for node in graph.adjacent(vertex):
+                self.relax_edge(node.value)
+
+    def relax_edge(self, edge):
+        """
+
+        :param edge:
+        :return:
+        """
+        v = edge._from
+        w = edge.to
+        if self.distTo[w] > self.distTo[v] + edge.weight:
+            self.distTo[w] = self.distTo[v] + edge.weight
+            self.edgeTo[w] = edge
+            if w not in self.ordered_queue:
+                heappush(self.ordered_queue, [self.distTo[w], w])
+
+    @classmethod
+    def info(cls):
+        print('''
+        Dijkstra's algorithm
+        
+        ・ Consider vertices in increasing order of distance from s (non-tree vertex with the lowest distTo[] value).
+        ・ Add vertex to tree and relax all edges pointing from that vertex.
+        
+        Proposition. 
+        ・ Dijkstra's algorithm computes a SPT in any edge-weighted digraph with nonnegative weights.
+        
+        Pf.
+        ・ Each edge e = v → w is relaxed exactly once (when v is relaxed), leaving distTo[w] ≤ distTo[v] + e.weight().
+        ・ Inequality holds until algorithm terminates because:
+            – distTo[w] cannot increase.
+            – distTo[v] will not change
+        ・ Thus, upon termination, shortest-paths optimality conditions hold.
+        
+        Dijkstra’s algorithm seem familiar?
+        ・ Prim’s algorithm is essentially the same algorithm.
+        ・ Both are in a family of algorithms that compute a graph’s spanning tree.        
         
         ''')
