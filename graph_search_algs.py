@@ -40,6 +40,7 @@ class GraphSearch(object):
         :param vertex:
         :return:
         """
+        _end = vertex
         path = []
         source_in_path = self.source in path
         while not source_in_path:
@@ -47,10 +48,11 @@ class GraphSearch(object):
             if new_vertex is None:
                 return []
             else:
-                path.append(new_vertex)
-                vertex = new_vertex
+                path.append(new_vertex._from)
+                vertex = new_vertex._from
             source_in_path = self.source in path
         path.reverse()
+        path.append(_end)
         return path
 
 
