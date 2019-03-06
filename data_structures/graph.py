@@ -37,11 +37,11 @@ NoPathFound = object()
 
 class Edge(list):
 
-    def __init__(self, source, to, weight):
-        self.source = source
+    def __init__(self, _from, to, weight):
+        self._from = _from
         self.to = to
         self.weight = weight
-        self.append(self.source)
+        self.append(self._from)
         self.append(self.to)
         self.append(self.weight)
 
@@ -90,7 +90,7 @@ class Graph(object):
             adj_to_vertex = line[1]
             weight = 0
             if len(line) > 2:
-                weigth = line[2]
+                weight = line[2]
             self.add_edge(vertex, adj_to_vertex, weight)
             if vertex not in self.vertices:
                 self.vertices.append(vertex)
@@ -113,16 +113,17 @@ class Graph(object):
 
         """
         self._edges_count += 1
+        self.edges.append([v1, v2, weight])
         bag1 = self.adjacency.get(v1, None)
         bag2 = self.adjacency.get(v2, None)
         if bag1 is None:
             bag1 = self.initialize_bag(v1, v2, weight)
         else:
-            bag1.add([v1, v2, weight])
+            bag1.add(Edge(v1, v2, weight))
         if bag2 is None:
             bag2 = self.initialize_bag(v1, v2, weight)
         else:
-            bag2.add([v1, v2, weight])
+            bag2.add(Edge(v1, v2, weight))
         self.adjacency[v1] = bag1
         self.adjacency[v2] = bag2
 
@@ -138,7 +139,6 @@ class Graph(object):
         if adjacent:
             return adjacent
         else:
-            #print("Vertex {0} does not exists!".format(str(vertex)))
             return []
 
     def degree(self, vertex):
@@ -212,11 +212,12 @@ class DiGraph(Graph):
 
         """
         self._edges_count += 1
+        self.edges.append(Edge(v1, v2, weight))
         bag1 = self.adjacency.get(v1, None)
         if bag1 is None:
             bag1 = self.initialize_bag(v1, v2, weight)
         else:
-            bag1.add([v1, v2, weight])
+            bag1.add(Edge(v1, v2, weight))
         self.adjacency[v1] = bag1
 
     def reverse(self):
