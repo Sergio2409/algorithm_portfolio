@@ -296,8 +296,15 @@ class Dijkstra(Algorithm, GraphSearch):
         if self.distTo[w] > self.distTo[v] + edge.weight:
             self.distTo[w] = self.distTo[v] + edge.weight
             self.edgeTo[w] = edge
+            self.print_result()
             if w not in self.ordered_queue:
                 heappush(self.ordered_queue, [self.distTo[w], w])
+
+    def print_result(self):
+        print('From source: ' + str(self.source) + '\n')
+        for vertex in self.distTo:
+            print('To vertex: {0}, Min distance: {1} '.format(str(vertex), str(self.distTo[vertex])) + '\n')
+
 
     @classmethod
     def info(cls):
