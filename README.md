@@ -22,6 +22,7 @@ Algorithms portfolio to be used in our projects.
   + Depth-first search (DFS, dfs)
   + Breadth-first search (BFS, bfs)
   + Dijkstra (Shortest Path)
+  + Kruskal's
 
 # References:
 - Algorithms: R OBERT S EDGEWICK | K EVIN W AYNE

@@ -13,6 +13,7 @@ Module description goes here
 from heapq import heappush, heappop
 from collections import OrderedDict, deque
 from algorithm import Algorithm
+from data_structures.union_find import UnionFind
 
 
 class GraphSearch(object):
@@ -305,7 +306,6 @@ class Dijkstra(Algorithm, GraphSearch):
         for vertex in self.distTo:
             print('To vertex: {0}, Min distance: {1} '.format(str(vertex), str(self.distTo[vertex])) + '\n')
 
-
     @classmethod
     def info(cls):
         print('''
@@ -329,3 +329,73 @@ class Dijkstra(Algorithm, GraphSearch):
         ・ Both are in a family of algorithms that compute a graph’s spanning tree.        
         
         ''')
+
+
+class Kruskals(Algorithm, GraphSearch):
+    """
+    Example:
+
+    from data_structures.graph import DiGraph
+    from graph_search_algs import Kruskals
+    graph = DiGraph([[0,7, 0.16], [2, 3, 0.17], [1,7, 0.19], [0,2, 0.26], [5,7, 0.28], [1, 3,0.29], [1, 5, 0.32], [2,7, 0.34], [4, 5, 0.35], [1, 2, 0.36], [4, 7, 0.37], [0, 4, 0.38], [6, 2, 0.40], [3, 6, 0.52]])
+    minimum_spa_tree = Kruskals(graph)
+    minimum_spa_tree.mst_queue
+
+    """
+
+    def __init__(self, graph):
+        self.distTo = OrderedDict()  # edgeTo[v] = previous vertex on path from s to v
+        self.ordered_queue = []
+        self.mst_queue = []
+        self.graph = graph
+        uf = UnionFind.create(graph.vertices_count)
+        for edge in self.graph.edges:
+            heappush(self.ordered_queue, [edge[2], edge])
+
+        while len(self.ordered_queue) > 0:
+            _, edge = heappop(self.ordered_queue)  # Take the vertex with the minimum weight.
+            if not uf.connected(edge._from, edge.to):
+                uf.union(edge._from, edge.to)
+                heappush(self.mst_queue, edge)
+
+    @classmethod
+    def info(cls):
+        print('''
+            Kruskal's algorithm
+            
+            Consider edges in ascending order of weight.
+            ・ Add next edge to tree T unless doing so would create a cycle.
+            
+            Proposition.
+                        
+            [Kruskal 1956] Kruskal's algorithm computes the MST.
+            
+            Pf. Kruskal's algorithm is a special case of the greedy MST algorithm.
+            
+            ・ Suppose Kruskal's algorithm colors the edge e = v–w black.
+            ・ Cut = set of vertices connected to v in tree T.
+            ・ No crossing edge is black.
+            ・ No crossing edge has lower weight. Why?
+            
+            Challenge.
+                        
+            Would adding edge v–w to tree T create a cycle? If not, add it. 
+            
+            Efficient solution. 
+            
+            Use the union-find data structure.
+            ・ Maintain a set for each connected component in T.
+            ・ If v and w are in same set, then adding v–w would create a cycle.
+            ・ To add v–w to T, merge sets containing v and w.
+            
+            Kruskal's algorithm computes MST in time proportional to E log E (in the worst case).
+                        
+            ''')
+
+
+
+
+
+
+
+
