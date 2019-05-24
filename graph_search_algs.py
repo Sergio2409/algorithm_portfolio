@@ -10,6 +10,7 @@
 Module description goes here
 
 """
+import math
 from heapq import heappush, heappop
 from collections import OrderedDict, deque
 from algorithm import Algorithm
@@ -393,9 +394,84 @@ class Kruskals(Algorithm, GraphSearch):
             ''')
 
 
+class FordFullkerson(Algorithm, GraphSearch):
 
+    def __init__(self, s, t):
+        self.initialize_graph()
 
+        n = self.graph.numero_vertices
+        INF = math.inf
+        max_flow = 0
 
+        while True:
+            for nodo in self.graph.lista_vertices:
+                nodo.padre = -1
+            start = self.graph.get_vertice(s)
+            fin = self.graph.get_vertice(t)
+            start.padre = -2
+            q = []
+            q.append(s)
+            while q and fin.padre == -1:
+                u = q.pop(0)
+                nodo_u = self.graph.get_vertice(u)
+                for nodo in self.graph.lista_vertices:
+                    if nodo.label in (nodo_u.lista_vecinos):
+                        for item in self.graph.edges:
+                            if item[1] == u and item[2] == nodo.label:
+                                cf = item[0] - item[3]
+                                break
+                    else:
+                        cf = 0
+                    if cf > 0 and nodo.padre == -1:
+                        q.append(nodo.label)
+                        nodo.padre = u
+            if fin.padre == -1:
+                break
 
+            v = t
+            delta = INF
+            while True:
+                nodo_v = self.graph.get_vertice(v)
+                u = nodo_v.padre
+                for item in self.graph.edges:
+                    if item[1] == u and item[2] == nodo_v.label:
+                        cf = item[0] - item[3]
+                        break
+                delta = min(delta, cf)
+                v = u
+                if v == s:
+                    break
 
+            v = t
+            while True:
+                nodo_v = self.graph.get_vertice(v)
+                u = nodo_v.padre
+                for item in self.graph.edges:
+                    if item[1] == str(u) and item[2] == nodo_v.label:
+                        item[3] += delta
+                for item in self.graph.edges:
+                    if item[1] == nodo_v.label and item[2] == str(u):
+                        item[3] -= delta
+                v = u
+                if v == s:
+                    break
+            max_flow += delta
 
+        print("Algs results: ")
+        for item in self.graph.edges:
+            print("{} {} {}".format("Capacity - >", item, "< - Flow"))
+        return (print("{} {} {} {} {} {}".format("The maximum flow from the node", s, "to the node", t, "is: ",
+                                                 max_flow)))
+
+    def initialize_graph(self):
+        from data_structures.graph2 import Graph2
+        self.graph = Graph2('Graph-A')
+        nodes = ['A', 'B', 'C', 'D', 'E', 'F']
+        edges = [('A', 'B', 10), ('A', 'D', 10), ('B', 'C', 4),
+                 ('B', 'D', 2), ('B', 'E', 8), ('C', 'F', 10),
+                 ('D', 'E', 9), ('E', 'C', 6), ('E', 'F', 10)]
+        for node in nodes:
+            self.graph.add_vertex(node)
+
+        for edge in edges:
+            self.graph.add_vertex_dir(edge[0], edge[1], edge[2])
