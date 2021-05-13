@@ -23,6 +23,11 @@ Algorithms portfolio to be used in our projects.
   + Breadth-first search (BFS, bfs)
   + Dijkstra (Shortest Path)
 
+# Cracking the Coding Interview:
+
+- Problems:
+  + Arrays and Strings
+
 # References:
 - Algorithms: R OBERT S EDGEWICK | K EVIN W AYNE
 - https://algs4.cs.princeton.edu/home/
