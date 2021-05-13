@@ -6,9 +6,16 @@
 #
 # This is free software; you can do what the LICENCE file allows you to.
 #
+
+# Problem
+#
+# Is Unique: Implement an algorithm to determine if a string has all unique characters.
+# What if you cannot use additional data structures?
+
 import time
 import unittest
 from collections import defaultdict
+
 
 def is_unique_chars(some_string):
     """
@@ -30,7 +37,6 @@ def is_unique_chars_pythonic(string):
     return len(set(string)) == len(string)
 
 
-
 class Test(unittest.TestCase):
     test_cases = [
         ("abcd", True),
@@ -39,7 +45,8 @@ class Test(unittest.TestCase):
         ("23ds2", False),
         ("hb 627jh=j ()", False),
         ("".join([chr(val) for val in range(128)]), True),  # unique 128 chars
-        ("".join([chr(val // 2) for val in range(129)]), False),  # non-unique 129 chars
+        # non-unique 129 chars
+        ("".join([chr(val // 2) for val in range(129)]), False),
     ]
     test_functions = [
         is_unique_chars_pythonic,
@@ -68,4 +75,3 @@ class Test(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-  
